@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Check, Copy, Clock, ArrowLeft } from "lucide-react";
+import QRCode from "qrcode";
 
 export const Route = createFileRoute("/pix")({
   component: PixPage,
@@ -28,6 +29,7 @@ function PixPage() {
   const [pix, setPix] = useState<PixData | null>(null);
   const [copied, setCopied] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
 
   useEffect(() => {
     try {
@@ -38,6 +40,19 @@ function PixPage() {
     }
     setLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (!pix) return;
+    const existing = pix.base64 || pix.image;
+    if (existing) {
+      setQrDataUrl(existing);
+      return;
+    }
+    if (!pix.code) return;
+    QRCode.toDataURL(pix.code, { width: 320, margin: 1 })
+      .then((url) => setQrDataUrl(url))
+      .catch(() => setQrDataUrl(""));
+  }, [pix]);
 
   const copyCode = async () => {
     if (!pix) return;
@@ -69,7 +84,7 @@ function PixPage() {
     );
   }
 
-  const qrSrc = pix.base64 || pix.image || "";
+  const qrSrc = qrDataUrl;
 
   return (
     <div className="min-h-screen bg-muted/30">
