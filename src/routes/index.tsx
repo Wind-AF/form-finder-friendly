@@ -28,6 +28,11 @@ import r4 from "@/assets/products/r4.webp";
 import r5 from "@/assets/products/r5.webp";
 import r6 from "@/assets/products/r6.webp";
 import r7 from "@/assets/products/r7.webp";
+import r8 from "@/assets/products/r8.webp";
+import r9 from "@/assets/products/r9.webp";
+import r10 from "@/assets/products/r10.webp";
+import r11 from "@/assets/products/r11.webp";
+import r12 from "@/assets/products/r12.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -41,7 +46,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const productImages = [mainImg, altImg, r1, r2, r3, r4, r5, altImg];
+const productImages = [mainImg, altImg, r8, r9, r10, r11, r12, altImg];
 
 const specs: Array<[string, string]> = [
   ["Modelo", "AFON-12L-BI-BC"],
