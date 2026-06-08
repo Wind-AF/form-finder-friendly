@@ -600,12 +600,18 @@ function Index() {
           <MessageCircle className="w-5 h-5" />
           <span className="text-[10px] mt-0.5">Chat</span>
         </button>
-        <button className="flex-1 bg-secondary text-foreground font-bold text-sm py-3 text-center rounded-full leading-tight">
+        <button
+          onClick={() => setSheetOpen(true)}
+          className="flex-1 bg-secondary text-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
+        >
           Adicionar
           <br />
           ao carrinho
         </button>
-        <button className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight">
+        <button
+          onClick={() => setSheetOpen(true)}
+          className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
+        >
           <span className="block">Comprar agora</span>
           <span className="block text-xs font-medium opacity-90">R$ 88,52</span>
         </button>
