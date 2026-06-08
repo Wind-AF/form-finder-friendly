@@ -353,37 +353,54 @@ function Index() {
 
       {/* Price banner */}
       <div
-        className="px-4 py-3"
-        style={{ background: "linear-gradient(to right, var(--price-from), var(--price-to))" }}
+        className="px-4 py-3.5"
+        style={{ background: "linear-gradient(135deg, var(--price-from), var(--price-to))" }}
       >
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="bg-destructive text-destructive-foreground text-xs font-bold px-1.5 py-0.5 rounded-sm">-87%</span>
-              <span className="text-white text-xs">R$</span>
-              <span className="text-3xl font-bold text-white tabular-nums leading-none">88,16</span>
-            </div>
-            <div className="mt-1">
-              <span className="text-white/70 text-sm line-through">R$ 674,16</span>
-            </div>
+        <div className="flex items-center gap-1.5 text-white text-[11px] font-bold mb-2">
+          <Zap className="w-3.5 h-3.5 fill-white" />
+          OFERTA RELÂMPAGO
+          <span className="ml-auto inline-flex items-center gap-1 bg-black/25 backdrop-blur-sm rounded-full px-2 py-0.5 tabular-nums">
+            ⏱ {countdown}
+          </span>
+        </div>
+        <div className="flex items-end gap-2">
+          <span className="bg-white text-destructive text-sm font-extrabold px-2 py-0.5 rounded">
+            -87%
+          </span>
+          <div className="flex items-baseline gap-1 text-white">
+            <span className="text-sm font-semibold">R$</span>
+            <span className="text-[42px] font-extrabold tabular-nums leading-none tracking-tight">
+              88,16
+            </span>
           </div>
-          <div className="text-right">
-            <div className="flex items-center gap-1 text-white text-xs font-bold">
-              <Zap className="w-3.5 h-3.5 fill-white" /> Oferta Relâmpago
-            </div>
-            <p className="text-white/90 text-xs font-semibold mt-1 tabular-nums">Termina em {countdown}</p>
-          </div>
+          <span className="text-white/70 text-sm line-through ml-1 mb-1">R$ 674,16</span>
+        </div>
+        <div className="mt-2.5 inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">
+          🎁 Você economiza R$&nbsp;586,00
+        </div>
+      </div>
+
+      {/* Stock urgency bar */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="flex items-center justify-between text-[11px] font-semibold mb-1.5">
+          <span className="text-destructive inline-flex items-center gap-1">
+            🔥 Restam <span className="tabular-nums">12</span> unidades
+          </span>
+          <span className="text-muted-foreground tabular-nums">87% vendido</span>
+        </div>
+        <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+          <div className="h-full w-[87%] bg-gradient-to-r from-destructive to-primary rounded-full" />
         </div>
       </div>
 
       {/* Save tags */}
       <div>
         <div className="px-4 py-2 flex gap-2 flex-wrap">
-          <span className="bg-destructive/10 text-destructive text-xs font-semibold px-2.5 py-1 rounded-sm border border-destructive/20">
-            🎁 Economize R$&nbsp;586,00
-          </span>
           <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-sm border border-primary/20">
-            Economize 87% com bônus
+            ✨ Bônus exclusivos inclusos
+          </span>
+          <span className="bg-emerald-500/10 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-sm border border-emerald-500/20">
+            🚚 Frete grátis
           </span>
         </div>
 
