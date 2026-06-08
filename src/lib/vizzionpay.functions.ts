@@ -23,11 +23,23 @@ export const createPixPayment = createServerFn({ method: "POST" })
       return { ok: false as const, error: "VIZZIONPAY_SECRET_KEY não configurada" };
     }
 
-    const body = {
+    const client: Record<string, string> = {
+      name: data.client.name.trim(),
+      email: data.client.email.trim(),
+      document: data.client.document.replace(/\D/g, ""),
+    };
+    if (data.client.phone && data.client.phone.trim()) {
+      client.phone = data.client.phone.trim();
+    } else {
+      // VizzionPay valida phone como obrigatório em muitos casos.
+      // Envia placeholder válido se o usuário não informou.
+      client.phone = "11999999999";
+    }
+
+    const body: Record<string, unknown> = {
       identifier: data.identifier,
       amount: Number(data.amount.toFixed(2)),
-      shippingFee: data.shippingFee ? Number(data.shippingFee.toFixed(2)) : undefined,
-      client: data.client,
+      client,
       products: data.products.map((p) => ({
         id: p.id,
         name: p.name,
@@ -35,6 +47,9 @@ export const createPixPayment = createServerFn({ method: "POST" })
         price: Number(p.price.toFixed(2)),
       })),
     };
+    if (data.shippingFee && data.shippingFee > 0) {
+      body.shippingFee = Number(data.shippingFee.toFixed(2));
+    }
 
     try {
       const res = await fetch("https://app.vizzionpay.com.br/api/v1/gateway/pix/receive", {
@@ -49,10 +64,13 @@ export const createPixPayment = createServerFn({ method: "POST" })
 
       const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
       if (!res.ok) {
+        const details = json.details
+          ? ` (${JSON.stringify(json.details)})`
+          : "";
         return {
           ok: false as const,
           error:
-            (json.message as string) ||
+            ((json.message as string) && `${json.message as string}${details}`) ||
             (json.errorDescription as string) ||
             `Erro ${res.status} ao gerar Pix`,
           status: res.status,
