@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Check, Copy, Clock, ArrowLeft } from "lucide-react";
-import QRCode from "qrcode";
 
 export const Route = createFileRoute("/pix")({
   component: PixPage,
@@ -29,7 +28,6 @@ function PixPage() {
   const [pix, setPix] = useState<PixData | null>(null);
   const [copied, setCopied] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [qrDataUrl, setQrDataUrl] = useState<string>("");
 
   useEffect(() => {
     try {
@@ -40,19 +38,6 @@ function PixPage() {
     }
     setLoaded(true);
   }, []);
-
-  useEffect(() => {
-    if (!pix) return;
-    const existing = pix.base64 || pix.image;
-    if (existing) {
-      setQrDataUrl(existing);
-      return;
-    }
-    if (!pix.code) return;
-    QRCode.toDataURL(pix.code, { width: 320, margin: 1 })
-      .then((url) => setQrDataUrl(url))
-      .catch(() => setQrDataUrl(""));
-  }, [pix]);
 
   const copyCode = async () => {
     if (!pix) return;
@@ -84,8 +69,6 @@ function PixPage() {
     );
   }
 
-  const qrSrc = qrDataUrl;
-
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="sticky top-0 z-40 bg-background flex items-center px-3 py-2.5 border-b border-border max-w-lg mx-auto">
@@ -102,23 +85,11 @@ function PixPage() {
           </div>
           <h2 className="text-xl font-extrabold text-foreground">Pedido criado com sucesso!</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Escaneie o QR Code ou copie o código PIX para pagar
+            Copie o código PIX abaixo e pague no app do seu banco
           </p>
         </div>
 
         <div className="bg-background border border-border rounded-2xl p-5 space-y-4">
-          {qrSrc ? (
-            <img
-              src={qrSrc}
-              alt="QR Code PIX"
-              className="w-60 h-60 mx-auto bg-white p-2 rounded-lg"
-            />
-          ) : (
-            <div className="w-60 h-60 mx-auto bg-muted rounded-lg flex items-center justify-center text-xs text-muted-foreground">
-              QR Code indisponível
-            </div>
-          )}
-
           <div className="text-center">
             <div className="text-2xl font-extrabold text-foreground">R$ {fmt(pix.amount)}</div>
             <div className="text-xs text-muted-foreground mt-1">
@@ -147,6 +118,26 @@ function PixPage() {
             <Clock className="w-3.5 h-3.5" />
             Pague com PIX a qualquer momento
           </div>
+        </div>
+
+        <div className="bg-background border border-border rounded-2xl p-5">
+          <h3 className="text-sm font-extrabold text-foreground mb-3">Como pagar em 5 passos</h3>
+          <ol className="space-y-3">
+            {[
+              "Copie o código PIX clicando no botão acima.",
+              "Abra o aplicativo do seu banco no celular.",
+              "Acesse a área PIX e escolha a opção \"PIX Copia e Cola\".",
+              "Cole o código copiado e confirme o valor de R$ " + fmt(pix.amount) + ".",
+              "Finalize o pagamento — a aprovação é instantânea e seu pedido será liberado.",
+            ].map((step, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <span className="text-sm text-foreground leading-snug">{step}</span>
+              </li>
+            ))}
+          </ol>
         </div>
 
         <p className="text-[11px] text-muted-foreground text-center">
