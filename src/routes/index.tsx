@@ -651,7 +651,7 @@ function Index() {
           className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
         >
           <span className="block">Comprar agora</span>
-          <span className="block text-xs font-medium opacity-90">R$ 88,16</span>
+          <span className="block text-xs font-medium opacity-90">R$ {formatPrice(variants[active].price)}</span>
         </button>
       </div>
 
