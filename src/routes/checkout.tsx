@@ -418,6 +418,7 @@ function Checkout() {
               className="input"
               placeholder="Como aparece no seu documento"
             />
+            {errors.name && <p className="text-[11px] text-destructive mt-1">{errors.name}</p>}
           </Field>
           <Field label="E-mail *">
             <input
@@ -430,6 +431,18 @@ function Checkout() {
             <p className="text-[11px] text-muted-foreground mt-1">
               Enviaremos comprovante e código de rastreio por e-mail.
             </p>
+            {errors.email && <p className="text-[11px] text-destructive mt-1">{errors.email}</p>}
+          </Field>
+          <Field label="CPF *">
+            <input
+              inputMode="numeric"
+              value={form.cpf}
+              onChange={(e) => setForm({ ...form, cpf: maskCPF(e.target.value) })}
+              className="input"
+              placeholder="000.000.000-00"
+              maxLength={14}
+            />
+            {errors.cpf && <p className="text-[11px] text-destructive mt-1">{errors.cpf}</p>}
           </Field>
         </section>
 
@@ -440,12 +453,30 @@ function Checkout() {
           </h2>
           <Field label="CEP *">
             <input
+              inputMode="numeric"
               value={form.cep}
-              onChange={(e) => setForm({ ...form, cep: e.target.value })}
+              onChange={(e) => {
+                const v = maskCEP(e.target.value);
+                setForm({ ...form, cep: v });
+                if (v.replace(/\D/g, "").length === 8) lookupCep(v);
+              }}
+              onBlur={(e) => lookupCep(e.target.value)}
               className="input"
               placeholder="00000-000"
+              maxLength={9}
             />
-            <button className="text-[11px] text-primary font-semibold mt-1">Não sei meu CEP</button>
+            <div className="flex items-center gap-2 mt-1">
+              {cepLoading && <span className="text-[11px] text-muted-foreground">Buscando...</span>}
+              <a
+                href="https://buscacepinter.correios.com.br/app/endereco/index.php"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[11px] text-primary font-semibold"
+              >
+                Não sei meu CEP
+              </a>
+            </div>
+            {errors.cep && <p className="text-[11px] text-destructive mt-1">{errors.cep}</p>}
           </Field>
           <div className="grid grid-cols-3 gap-2">
             <div className="col-span-2">
@@ -569,7 +600,10 @@ function Checkout() {
             </div>
             <Countdown />
           </div>
-          <button className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-full text-base">
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-full text-base"
+          >
             Fazer pedido
           </button>
         </div>
