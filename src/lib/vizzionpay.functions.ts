@@ -1,26 +1,70 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { PRODUCT_CATALOG, SHIPPING_OPTIONS, type ShippingMethod } from "./products.catalog";
 
 export const VIZZIONPAY_PUBLIC_KEY = "contato-wind-af_jq055rbdjh8n6tho";
 
-export type CreatePixInput = {
-  identifier: string;
-  amount: number;
-  shippingFee?: number;
-  client: {
-    name: string;
-    email: string;
-    phone?: string;
-    document: string;
-  };
-  products: Array<{ id: string; name: string; quantity: number; price: number }>;
-};
+const CreatePixSchema = z.object({
+  identifier: z.string().trim().min(1).max(64).regex(/^[a-zA-Z0-9_-]+$/),
+  shippingMethod: z.enum(["free", "sedex"]).default("free"),
+  client: z.object({
+    name: z.string().trim().min(1).max(120),
+    email: z.string().trim().email().max(255),
+    phone: z.string().trim().max(20).optional(),
+    document: z.string().min(1).max(20),
+  }),
+  products: z
+    .array(
+      z.object({
+        id: z.string().min(1).max(64),
+        quantity: z.number().int().positive().max(20),
+      }),
+    )
+    .min(1)
+    .max(20),
+});
+
+export type CreatePixInput = z.input<typeof CreatePixSchema>;
 
 export const createPixPayment = createServerFn({ method: "POST" })
-  .inputValidator((data: CreatePixInput) => data)
+  .inputValidator((raw: unknown) => CreatePixSchema.parse(raw))
   .handler(async ({ data }) => {
     const secretKey = process.env.VIZZIONPAY_SECRET_KEY;
     if (!secretKey) {
-      return { ok: false as const, error: "VIZZIONPAY_SECRET_KEY não configurada" };
+      console.error("[vizzionpay] Missing VIZZIONPAY_SECRET_KEY env var");
+      return {
+        ok: false as const,
+        error: "Serviço de pagamento indisponível. Tente novamente mais tarde.",
+      };
+    }
+
+    // Server-side price computation — never trust client-supplied amounts.
+    const products: Array<{ id: string; name: string; quantity: number; price: number }> = [];
+    let subtotal = 0;
+    for (const item of data.products) {
+      const catalogItem = PRODUCT_CATALOG[item.id];
+      if (!catalogItem) {
+        return {
+          ok: false as const,
+          error: `Produto inválido: ${item.id}`,
+        };
+      }
+      const lineTotal = catalogItem.price * item.quantity;
+      subtotal += lineTotal;
+      products.push({
+        id: item.id,
+        name: catalogItem.name,
+        quantity: item.quantity,
+        price: Number(catalogItem.price.toFixed(2)),
+      });
+    }
+
+    const shippingMethod: ShippingMethod = data.shippingMethod ?? "free";
+    const shippingFee = SHIPPING_OPTIONS[shippingMethod];
+    const amount = Number((subtotal + shippingFee).toFixed(2));
+
+    if (amount <= 0) {
+      return { ok: false as const, error: "Valor do pedido inválido" };
     }
 
     const client: Record<string, string> = {
@@ -31,24 +75,17 @@ export const createPixPayment = createServerFn({ method: "POST" })
     if (data.client.phone && data.client.phone.trim()) {
       client.phone = data.client.phone.trim();
     } else {
-      // VizzionPay valida phone como obrigatório em muitos casos.
-      // Envia placeholder válido se o usuário não informou.
       client.phone = "11999999999";
     }
 
     const body: Record<string, unknown> = {
       identifier: data.identifier,
-      amount: Number(data.amount.toFixed(2)),
+      amount,
       client,
-      products: data.products.map((p) => ({
-        id: p.id,
-        name: p.name,
-        quantity: p.quantity,
-        price: Number(p.price.toFixed(2)),
-      })),
+      products,
     };
-    if (data.shippingFee && data.shippingFee > 0) {
-      body.shippingFee = Number(data.shippingFee.toFixed(2));
+    if (shippingFee > 0) {
+      body.shippingFee = Number(shippingFee.toFixed(2));
     }
 
     try {
@@ -64,15 +101,10 @@ export const createPixPayment = createServerFn({ method: "POST" })
 
       const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
       if (!res.ok) {
-        const details = json.details
-          ? ` (${JSON.stringify(json.details)})`
-          : "";
+        console.error("[vizzionpay] PIX create failed", res.status, json);
         return {
           ok: false as const,
-          error:
-            ((json.message as string) && `${json.message as string}${details}`) ||
-            (json.errorDescription as string) ||
-            `Erro ${res.status} ao gerar Pix`,
+          error: "Não foi possível gerar o Pix. Tente novamente em instantes.",
           status: res.status,
         };
       }
@@ -82,7 +114,7 @@ export const createPixPayment = createServerFn({ method: "POST" })
         ok: true as const,
         transactionId: json.transactionId as string,
         status: json.status as string,
-        amount: data.amount,
+        amount,
         pix: {
           code: pix.code ?? "",
           base64: pix.base64 ?? "",
@@ -90,9 +122,10 @@ export const createPixPayment = createServerFn({ method: "POST" })
         },
       };
     } catch (err) {
+      console.error("[vizzionpay] PIX create exception", err);
       return {
         ok: false as const,
-        error: err instanceof Error ? err.message : "Falha ao chamar VizzionPay",
+        error: "Falha ao processar pagamento. Tente novamente.",
       };
     }
   });
