@@ -169,7 +169,7 @@ type Variant = {
 
 const variants: Variant[] = [
   {
-    name: "Fritadeira Elétrica Forno Oven Air Fryer 12L Mondial",
+    name: "Fritadeira Elétrica Forno Oven Air Fryer 12L Mondial AFON-12L-BI-BC",
     image: vAfon12,
     price: 88.16,
     oldPrice: 674.16,
@@ -178,47 +178,65 @@ const variants: Variant[] = [
     voltages: ["127V", "220V"],
   },
   {
-    name: "Fritadeira Sem Óleo Air Fryer Family 4L Mondial",
-    image: vCGbRoz4x,
-    price: 94.32,
-    oldPrice: 612.32,
-    discount: 84,
-    colors: ["Preto/Inox", "Preto"],
-    voltages: ["127V", "220V"],
-  },
-  {
-    name: "Fritadeira Sem Óleo Air Fryer Pratic 3,5L Mondial",
+    name: "Fritadeira Sem Óleo Air Fryer 3,5L Mondial AF-30-I",
     image: vAf30i,
-    price: 79.9,
-    oldPrice: 549.9,
+    price: 68.96,
+    oldPrice: 372.96,
+    discount: 82,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer 3,5L Mondial AF-30-DI Digital Touch Preta",
+    image: vCGbRoz4x,
+    price: 74.68,
+    oldPrice: 395.68,
+    discount: 81,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer 4L Mondial Family AFN-40-BI Preto/Inox 1500W",
+    image: vAfn40,
+    price: 74.48,
+    oldPrice: 483.48,
     discount: 85,
     colors: ["Preto/Inox", "Preto"],
     voltages: ["127V", "220V"],
   },
   {
-    name: "Fritadeira Sem Óleo Air Fryer Grand Family 5L Mondial",
+    name: "Fritadeira Sem Óleo Air Fryer 5L Mondial Grand Family AFN-50-BI",
     image: vAfn50,
-    price: 99.5,
-    oldPrice: 689.0,
+    price: 83.84,
+    oldPrice: 548.84,
     discount: 85,
     colors: ["Preto/Inox", "Preto"],
     voltages: ["127V", "220V"],
   },
   {
-    name: "Fritadeira Sem Óleo Air Fryer 8L Mondial Mega Family",
+    name: "Fritadeira Sem Óleo Air Fryer 8L Mondial Mega Family AFN-80-BI Preto 1900W",
     image: vAfn80,
     price: 110.56,
     oldPrice: 771.56,
     discount: 86,
-    colors: ["Preto/Inox", "Preto"],
+    colors: ["Preto"],
     voltages: ["127V", "220V"],
   },
   {
-    name: "Fritadeira Air Fryer Dual Duplo Cesto Mondial",
+    name: "Fritadeira Air Fryer Dual Duplo Cesto 8L Mondial AFD-01-BI Dualzone",
     image: vAfd01,
+    price: 134.12,
+    oldPrice: 759.12,
+    discount: 82,
+    colors: ["Preto"],
+    voltages: ["220V"],
+  },
+  {
+    name: "Fritadeira Air Fryer Forno Oven 12L Mondial AFON-12L-BI Preto/Inox 2000W",
+    image: vAfon12,
     price: 120.12,
-    oldPrice: 820.12,
-    discount: 85,
+    oldPrice: 740.12,
+    discount: 84,
     colors: ["Preto/Inox", "Vermelho/Inox"],
     voltages: ["127V"],
   },
@@ -343,10 +361,10 @@ function Index() {
             <div className="flex items-center gap-2">
               <span className="bg-destructive text-destructive-foreground text-xs font-bold px-1.5 py-0.5 rounded-sm">-87%</span>
               <span className="text-white text-xs">R$</span>
-              <span className="text-3xl font-bold text-white tabular-nums leading-none">88,52</span>
+              <span className="text-3xl font-bold text-white tabular-nums leading-none">88,16</span>
             </div>
             <div className="mt-1">
-              <span className="text-white/70 text-sm line-through">R$ 674,52</span>
+              <span className="text-white/70 text-sm line-through">R$ 674,16</span>
             </div>
           </div>
           <div className="text-right">
@@ -614,7 +632,7 @@ function Index() {
           className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
         >
           <span className="block">Comprar agora</span>
-          <span className="block text-xs font-medium opacity-90">R$ 88,52</span>
+          <span className="block text-xs font-medium opacity-90">R$ 88,16</span>
         </button>
       </div>
 
