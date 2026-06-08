@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createPixPayment } from "@/lib/vizzionpay.functions";
@@ -16,8 +16,6 @@ import {
   Lock,
   ChevronRight,
   X,
-  Copy,
-  Check,
 } from "lucide-react";
 import af30i from "@/assets/products/product-airfryer-af30i-CwILFnZb.webp";
 import afon12 from "@/assets/products/product-airfryer-afon12bi-Dei_i9sw.webp";
@@ -143,16 +141,9 @@ function Checkout() {
   const [cepLoading, setCepLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [pixResult, setPixResult] = useState<{
-    code: string;
-    base64: string;
-    image: string;
-    amount: number;
-    transactionId: string;
-  } | null>(null);
   const [pixError, setPixError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const createPix = useServerFn(createPixPayment);
+  const navigate = useNavigate();
 
   // Masks
   const maskCPF = (v: string) =>
@@ -271,28 +262,25 @@ function Checkout() {
         setPixError(res.error || "Não foi possível gerar o Pix");
         return;
       }
-      setPixResult({
-        code: res.pix.code,
-        base64: res.pix.base64,
-        image: res.pix.image,
-        amount: res.amount,
-        transactionId: res.transactionId,
-      });
+      try {
+        sessionStorage.setItem(
+          "pq:pix",
+          JSON.stringify({
+            code: res.pix.code,
+            base64: res.pix.base64,
+            image: res.pix.image,
+            amount: res.amount,
+            transactionId: res.transactionId,
+          }),
+        );
+      } catch {
+        // ignore storage failures
+      }
+      navigate({ to: "/pix" });
     } catch (err) {
       setPixError(err instanceof Error ? err.message : "Erro ao processar pagamento");
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const copyPix = async () => {
-    if (!pixResult) return;
-    try {
-      await navigator.clipboard.writeText(pixResult.code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // ignore
     }
   };
 
@@ -695,62 +683,6 @@ function Checkout() {
         </div>
       </div>
 
-      {pixResult && (
-        <div className="fixed inset-0 z-[60] bg-black/60 flex items-end sm:items-center justify-center p-3">
-          <div className="bg-background rounded-2xl w-full max-w-md max-h-[92vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <h3 className="text-base font-bold">Pagamento PIX</h3>
-              <button onClick={() => setPixResult(null)} className="p-1" aria-label="Fechar">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-4 space-y-3 text-center">
-              <div className="w-14 h-14 mx-auto rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                <Check className="w-7 h-7 text-emerald-600" strokeWidth={3} />
-              </div>
-              <div>
-                <p className="text-base font-bold">Pedido criado com sucesso!</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Escaneie o QR Code ou copie o código PIX para pagar
-                </p>
-              </div>
-              {pixResult.base64 ? (
-                <img
-                  src={pixResult.base64}
-                  alt="QR Code PIX"
-                  className="w-56 h-56 mx-auto bg-white p-2 rounded-lg border border-border"
-                />
-              ) : pixResult.image ? (
-                <img
-                  src={pixResult.image}
-                  alt="QR Code PIX"
-                  className="w-56 h-56 mx-auto bg-white p-2 rounded-lg border border-border"
-                />
-              ) : null}
-              <div className="text-xl font-extrabold">R$ {fmt(pixResult.amount)}</div>
-              <div className="text-[11px] text-muted-foreground">
-                Pagamento via PIX · Aprovação instantânea
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-left">
-                <p className="text-[11px] text-muted-foreground text-center mb-1">
-                  Código PIX Copia e Cola:
-                </p>
-                <p className="text-[11px] font-mono break-all leading-relaxed">{pixResult.code}</p>
-              </div>
-              <button
-                onClick={copyPix}
-                className="w-full bg-foreground text-background font-bold py-3 rounded-full text-sm inline-flex items-center justify-center gap-2"
-              >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copied ? "Código copiado!" : "Copiar código PIX"}
-              </button>
-              <p className="text-[11px] text-muted-foreground">
-                ID da transação: {pixResult.transactionId}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
