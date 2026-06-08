@@ -46,6 +46,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-link: var(--link);
+  --color-price-from: var(--price-from);
+  --color-price-to: var(--price-to);
+  --color-green-badge: var(--green-badge);
+  --color-green-badge-foreground: var(--green-badge-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
