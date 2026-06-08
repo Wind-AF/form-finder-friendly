@@ -859,13 +859,32 @@ function Index() {
 
             {/* Sticky actions */}
             <div className="shrink-0 border-t border-border px-4 py-3 space-y-2 bg-background">
-              <button className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-full leading-tight">
+              {(!selectedColor || !selectedVoltage) && (
+                <p className="text-center text-xs text-destructive font-medium">
+                  Selecione {(!selectedColor && !selectedVoltage) ? "cor e voltagem" : !selectedColor ? "a cor" : "a voltagem"} para continuar
+                </p>
+              )}
+              <button
+                disabled={!selectedColor || !selectedVoltage}
+                onClick={() => {
+                  if (!selectedColor || !selectedVoltage) return;
+                  window.location.href = "/checkout";
+                }}
+                className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-full leading-tight disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <span className="block text-base">Comprar agora</span>
                 <span className="block text-xs font-medium opacity-90">
                   R$ {formatPrice(variant.price * qty)}
                 </span>
               </button>
-              <button className="w-full border border-primary text-primary font-bold py-3 rounded-full flex items-center justify-center gap-2">
+              <button
+                disabled={!selectedColor || !selectedVoltage}
+                onClick={() => {
+                  if (!selectedColor || !selectedVoltage) return;
+                  window.location.href = "/checkout";
+                }}
+                className="w-full border border-primary text-primary font-bold py-3 rounded-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <ShoppingCart className="w-4 h-4" />
                 Adicionar ao Carrinho
               </button>
