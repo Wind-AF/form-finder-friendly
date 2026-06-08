@@ -361,10 +361,10 @@ function Index() {
             <div className="flex items-center gap-2">
               <span className="bg-destructive text-destructive-foreground text-xs font-bold px-1.5 py-0.5 rounded-sm">-87%</span>
               <span className="text-white text-xs">R$</span>
-              <span className="text-3xl font-bold text-white tabular-nums leading-none">88,52</span>
+              <span className="text-3xl font-bold text-white tabular-nums leading-none">88,16</span>
             </div>
             <div className="mt-1">
-              <span className="text-white/70 text-sm line-through">R$ 674,52</span>
+              <span className="text-white/70 text-sm line-through">R$ 674,16</span>
             </div>
           </div>
           <div className="text-right">
@@ -632,7 +632,7 @@ function Index() {
           className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
         >
           <span className="block">Comprar agora</span>
-          <span className="block text-xs font-medium opacity-90">R$ 88,52</span>
+          <span className="block text-xs font-medium opacity-90">R$ 88,16</span>
         </button>
       </div>
 
