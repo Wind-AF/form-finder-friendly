@@ -143,6 +143,63 @@ const reviews: Review[] = [
     images: [r7, r1],
     likes: 9,
   },
+  {
+    initials: "MA",
+    name: "marianasouza_88",
+    date: "2026-05-12 21:14",
+    variant: "Preto com Inox, 220V",
+    fields: [
+      ["Potência", "Aquece muito rápido"],
+      ["Facilidade de limpeza", "Super fácil, sai tudo com uma esponja"],
+    ],
+    text: "Simplesmente perfeita! Fiz batata, frango, pão de queijo e tudo ficou crocante por fora e macio por dentro. Chegou em 4 dias, super bem embalada. Recomendo demais 😍",
+    images: [r8, r9],
+    likes: 47,
+  },
+  {
+    initials: "RC",
+    name: "rafaelcoelho_rs",
+    date: "2026-05-15 10:08",
+    variant: "Preto com Inox, 110V",
+    text: "Comprei desconfiado por causa do preço, mas é a Mondial original mesmo, com nota fiscal e tudo. Já é a segunda que peço, a primeira foi presente pra minha mãe. Vale cada centavo.",
+    images: [r10],
+    likes: 38,
+  },
+  {
+    initials: "CA",
+    name: "camila.alves",
+    date: "2026-05-19 14:32",
+    variant: "Preto com Inox, 220V",
+    fields: [
+      ["Custo-benefício", "Imbatível"],
+      ["Tamanho", "Cabe um frango inteiro tranquilo"],
+    ],
+    text: "Espaço enorme, faço comida pra família toda de uma vez só. O painel digital é muito intuitivo. Melhor compra do ano!",
+    images: [r11, r12, r8],
+    likes: 56,
+  },
+  {
+    initials: "PE",
+    name: "pedro.henrique92",
+    date: "2026-05-22 19:47",
+    variant: "Preto com Inox, 110V",
+    text: "Entrega muito rápida, em 3 dias estava em casa. Produto novo, lacrado, igualzinho às fotos. Cozinha sem aquele cheiro de fritura, recomendo!",
+    images: [r9, r11],
+    likes: 19,
+  },
+  {
+    initials: "JU",
+    name: "juliana_rsantos",
+    date: "2026-05-28 08:15",
+    variant: "Preto com Inox, 220V",
+    fields: [
+      ["Potência", "Excelente"],
+      ["Controle de temperatura", "Muito preciso"],
+    ],
+    text: "Estou apaixonada! Já fiz bolo, lasanha, frango assado, batata, tudo fica uma delícia. O forno é grande de verdade, não é forninho de brinquedo. Atendimento da loja nota 10.",
+    images: [r12, r10, r7],
+    likes: 62,
+  },
 ];
 
 function useCountdown(initialSeconds: number) {
@@ -487,12 +544,12 @@ function Index() {
         </div>
         <div className="flex gap-2 flex-wrap mb-5">
           {[
-            ["Tudo (793)", true],
-            ["5 Estrelas (701)", false],
-            ["4 Estrelas (52)", false],
-            ["3 Estrelas (22)", false],
-            ["Com Comentários (128)", false],
-            ["Com Mídia (102)", false],
+            ["Tudo (3.512)", true],
+            ["5 Estrelas (3.104)", false],
+            ["4 Estrelas (287)", false],
+            ["3 Estrelas (78)", false],
+            ["Com Comentários (842)", false],
+            ["Com Mídia (419)", false],
           ].map(([label, active]) => (
             <span
               key={label as string}
