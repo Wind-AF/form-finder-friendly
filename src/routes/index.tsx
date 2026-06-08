@@ -21,6 +21,12 @@ import {
 } from "lucide-react";
 import mainImg from "@/assets/products/product-airfryer-afon12-Dq7tqLjo.webp";
 import altImg from "@/assets/products/product-airfryer-CGbRoz4x.webp";
+import vAfon12 from "@/assets/products/product-airfryer-afon12-Dq7tqLjo-2.webp";
+import vAfd01 from "@/assets/products/product-airfryer-afd01-CT5TgmNc.webp";
+import vAf30i from "@/assets/products/product-airfryer-af30i-CwILFnZb.webp";
+import vAfn40 from "@/assets/products/product-airfryer-afn40-DUbyBXj0.webp";
+import vAfn50 from "@/assets/products/product-airfryer-afn50-CZaNQrt7.webp";
+import vAfn80 from "@/assets/products/product-airfryer-afn80-PWSMgTtG.webp";
 import r1 from "@/assets/products/r1.webp";
 import r2 from "@/assets/products/r2.webp";
 import r3 from "@/assets/products/r3.webp";
@@ -150,10 +156,101 @@ function useCountdown(initialSeconds: number) {
   return `${hh}:${mm}:${ss}`;
 }
 
+type Variant = {
+  name: string;
+  image: string;
+  price: number;
+  oldPrice: number;
+  discount: number;
+  colors: string[];
+  voltages: string[];
+};
+
+const variants: Variant[] = [
+  {
+    name: "Fritadeira Elétrica Forno Oven Air Fryer 12L Mondial",
+    image: vAfon12,
+    price: 88.16,
+    oldPrice: 674.16,
+    discount: 87,
+    colors: ["Preto/Inox"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer Family 4L Mondial",
+    image: vAfn40,
+    price: 94.32,
+    oldPrice: 612.32,
+    discount: 84,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer Pratic 3,5L Mondial",
+    image: vAf30i,
+    price: 79.9,
+    oldPrice: 549.9,
+    discount: 85,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer Grand Family 5L Mondial",
+    image: vAfn50,
+    price: 99.5,
+    oldPrice: 689.0,
+    discount: 85,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer 8L Mondial Mega Family",
+    image: vAfn80,
+    price: 110.56,
+    oldPrice: 771.56,
+    discount: 86,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Air Fryer Dual Duplo Cesto Mondial",
+    image: vAfd01,
+    price: 120.12,
+    oldPrice: 820.12,
+    discount: 85,
+    colors: ["Preto/Inox", "Vermelho/Inox"],
+    voltages: ["127V"],
+  },
+];
+
+function formatPrice(v: number) {
+  return v.toFixed(2).replace(".", ",");
+}
+
 function Index() {
   const [active, setActive] = useState(0);
   const countdown = useCountdown(3575);
   const [toastVisible, setToastVisible] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedVoltage, setSelectedVoltage] = useState<string | null>(null);
+  const [qty, setQty] = useState(1);
+  const variant = variants[selectedVariant];
+  useEffect(() => {
+    setSelectedColor(null);
+    setSelectedVoltage(null);
+  }, [selectedVariant]);
+  useEffect(() => {
+    if (sheetOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sheetOpen]);
   useEffect(() => {
     const t = setTimeout(() => setToastVisible(true), 800);
     return () => clearTimeout(t);
@@ -503,12 +600,18 @@ function Index() {
           <MessageCircle className="w-5 h-5" />
           <span className="text-[10px] mt-0.5">Chat</span>
         </button>
-        <button className="flex-1 bg-secondary text-foreground font-bold text-sm py-3 text-center rounded-full leading-tight">
+        <button
+          onClick={() => setSheetOpen(true)}
+          className="flex-1 bg-secondary text-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
+        >
           Adicionar
           <br />
           ao carrinho
         </button>
-        <button className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight">
+        <button
+          onClick={() => setSheetOpen(true)}
+          className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
+        >
           <span className="block">Comprar agora</span>
           <span className="block text-xs font-medium opacity-90">R$ 88,52</span>
         </button>
@@ -561,6 +664,214 @@ function Index() {
           </button>
         </div>
       </div>
+
+      {/* Cart bottom sheet */}
+      {sheetOpen && (
+        <div className="fixed inset-0 z-[60] flex items-end justify-center">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setSheetOpen(false)}
+          />
+          <div className="relative w-full max-w-lg bg-background rounded-t-2xl max-h-[92vh] flex flex-col animate-in slide-in-from-bottom duration-200">
+            <div className="pt-2 pb-1 flex justify-center shrink-0">
+              <div className="w-10 h-1 rounded-full bg-border" />
+            </div>
+            <button
+              onClick={() => setSheetOpen(false)}
+              aria-label="Fechar"
+              className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-secondary"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="overflow-y-auto px-4 pt-2 pb-4 flex-1">
+              {/* Header: image + price */}
+              <div className="flex gap-3 items-start pr-8">
+                <img
+                  src={variant.image}
+                  alt={variant.name}
+                  className="w-20 h-20 rounded-lg object-contain bg-secondary shrink-0"
+                />
+                <div className="flex-1 min-w-0 pt-1">
+                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                    <span className="bg-destructive/10 text-destructive text-xs font-bold px-1.5 py-0.5 rounded">
+                      -{variant.discount}%
+                    </span>
+                    <span className="text-primary text-sm font-medium">R$</span>
+                    <span className="text-2xl font-bold text-primary tabular-nums leading-none">
+                      {formatPrice(variant.price)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground line-through mt-1">
+                    R$ {formatPrice(variant.oldPrice)}
+                  </p>
+                  <span className="inline-block mt-1.5 bg-primary text-primary-foreground text-[11px] font-semibold px-2 py-0.5 rounded">
+                    Frete grátis
+                  </span>
+                </div>
+              </div>
+
+              {/* Variant carousel */}
+              <div className="mt-4 -mx-4 px-4 overflow-x-auto">
+                <div className="flex gap-2 pb-2">
+                  {variants.map((v, i) => {
+                    const isActive = i === selectedVariant;
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedVariant(i)}
+                        className={`shrink-0 w-[88px] text-left transition ${
+                          isActive ? "" : "opacity-90"
+                        }`}
+                      >
+                        <div
+                          className={`w-[88px] h-[88px] rounded-md overflow-hidden flex items-center justify-center bg-secondary ${
+                            isActive ? "ring-2 ring-primary" : "ring-1 ring-border"
+                          }`}
+                        >
+                          <img
+                            src={v.image}
+                            alt={v.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <p
+                          className={`text-[11px] mt-1 leading-tight line-clamp-2 ${
+                            isActive ? "text-primary font-semibold underline" : "text-foreground"
+                          }`}
+                        >
+                          {v.name}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Oferta Relâmpago bar */}
+              <div className="mt-3 bg-primary rounded-md px-3 py-2.5 flex items-center justify-between text-primary-foreground">
+                <div className="flex items-center gap-1.5 text-sm font-bold">
+                  <Zap className="w-4 h-4 fill-current" />
+                  <span>Oferta Relâmpago</span>
+                </div>
+                <span className="text-sm font-semibold">Termina em 1 dia</span>
+              </div>
+
+              {/* Color */}
+              {variant.colors.length > 0 && (
+                <div className="mt-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-base font-bold text-foreground">
+                      Cor{" "}
+                      <span className="text-muted-foreground font-normal">
+                        ({variant.colors.length})
+                      </span>
+                    </p>
+                    {!selectedColor && (
+                      <span className="text-sm text-muted-foreground">Selecione</span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {variant.colors.map((c) => {
+                      const isOn = selectedColor === c;
+                      return (
+                        <button
+                          key={c}
+                          onClick={() => setSelectedColor(c)}
+                          className={`rounded-lg p-3 flex flex-col items-center gap-1.5 transition ${
+                            isOn ? "border-2 border-primary" : "border border-border"
+                          }`}
+                        >
+                          <img
+                            src={variant.image}
+                            alt={c}
+                            className="w-12 h-12 object-contain"
+                          />
+                          <span className="text-xs font-semibold text-foreground">{c}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Voltage */}
+              <div className="mt-5">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-base font-bold text-foreground">
+                    Voltagem{" "}
+                    <span className="text-muted-foreground font-normal">
+                      ({variant.voltages.length})
+                    </span>
+                  </p>
+                  {!selectedVoltage && (
+                    <span className="text-sm text-muted-foreground">Selecione</span>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {variant.voltages.map((v) => {
+                    const isOn = selectedVoltage === v;
+                    return (
+                      <button
+                        key={v}
+                        onClick={() => setSelectedVoltage(v)}
+                        className={`rounded-lg p-3 flex flex-col items-center gap-1.5 transition ${
+                          isOn ? "border-2 border-primary" : "border border-border"
+                        }`}
+                      >
+                        <img
+                          src={variant.image}
+                          alt={v}
+                          className="w-12 h-12 object-contain"
+                        />
+                        <span className="text-xs font-semibold text-foreground">{v}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Qty */}
+              <div className="mt-5 flex items-center justify-between">
+                <p className="text-base font-bold text-foreground">Quantidade</p>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setQty((q) => Math.max(1, q - 1))}
+                    aria-label="Diminuir"
+                    className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-foreground"
+                  >
+                    –
+                  </button>
+                  <span className="text-base font-semibold w-6 text-center tabular-nums">
+                    {qty}
+                  </span>
+                  <button
+                    onClick={() => setQty((q) => q + 1)}
+                    aria-label="Aumentar"
+                    className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-foreground"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Sticky actions */}
+            <div className="shrink-0 border-t border-border px-4 py-3 space-y-2 bg-background">
+              <button className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-full leading-tight">
+                <span className="block text-base">Comprar agora</span>
+                <span className="block text-xs font-medium opacity-90">
+                  R$ {formatPrice(variant.price * qty)}
+                </span>
+              </button>
+              <button className="w-full border border-primary text-primary font-bold py-3 rounded-full flex items-center justify-center gap-2">
+                <ShoppingCart className="w-4 h-4" />
+                Adicionar ao Carrinho
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
