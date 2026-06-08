@@ -56,7 +56,6 @@ export const createPixPayment = createServerFn({ method: "POST" })
             (json.errorDescription as string) ||
             `Erro ${res.status} ao gerar Pix`,
           status: res.status,
-          details: json,
         };
       }
 
