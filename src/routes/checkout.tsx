@@ -127,6 +127,7 @@ function Checkout() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    cpf: "",
     cep: "",
     rua: "",
     numero: "",
@@ -135,6 +136,83 @@ function Checkout() {
     cidade: "",
     estado: "",
   });
+  const [cepLoading, setCepLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Masks
+  const maskCPF = (v: string) =>
+    v.replace(/\D/g, "").slice(0, 11)
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  const maskCEP = (v: string) =>
+    v.replace(/\D/g, "").slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
+
+  // CPF algorithm
+  const isValidCPF = (raw: string) => {
+    const cpf = raw.replace(/\D/g, "");
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += parseInt(cpf[i]) * (10 - i);
+    let d1 = (sum * 10) % 11;
+    if (d1 === 10) d1 = 0;
+    if (d1 !== parseInt(cpf[9])) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += parseInt(cpf[i]) * (11 - i);
+    let d2 = (sum * 10) % 11;
+    if (d2 === 10) d2 = 0;
+    return d2 === parseInt(cpf[10]);
+  };
+
+  // ViaCEP lookup
+  const lookupCep = async (cepValue: string) => {
+    const digits = cepValue.replace(/\D/g, "");
+    if (digits.length !== 8) return;
+    setCepLoading(true);
+    setErrors((e) => ({ ...e, cep: "" }));
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+      const data = await res.json();
+      if (data.erro) {
+        setErrors((e) => ({ ...e, cep: "CEP não encontrado" }));
+      } else {
+        setForm((f) => ({
+          ...f,
+          rua: data.logradouro || f.rua,
+          bairro: data.bairro || f.bairro,
+          cidade: data.localidade || f.cidade,
+          estado: data.uf || f.estado,
+          complemento: f.complemento || data.complemento || "",
+        }));
+      }
+    } catch {
+      setErrors((e) => ({ ...e, cep: "Erro ao buscar CEP" }));
+    } finally {
+      setCepLoading(false);
+    }
+  };
+
+  const validateAll = () => {
+    const errs: Record<string, string> = {};
+    const nameParts = form.name.trim().split(/\s+/).filter((p) => p.length >= 2);
+    if (nameParts.length < 2) errs.name = "Informe nome e sobrenome";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = "E-mail inválido";
+    if (!isValidCPF(form.cpf)) errs.cpf = "CPF inválido (11 dígitos)";
+    if (form.cep.replace(/\D/g, "").length !== 8) errs.cep = "CEP deve ter 8 dígitos";
+    if (!form.rua.trim()) errs.rua = "Obrigatório";
+    if (!form.numero.trim()) errs.numero = "Obrigatório";
+    if (!form.bairro.trim()) errs.bairro = "Obrigatório";
+    if (!form.cidade.trim()) errs.cidade = "Obrigatório";
+    if (!form.estado) errs.estado = "Obrigatório";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (validateAll()) {
+      alert("Pedido validado! (próximo passo: pagamento Pix)");
+    }
+  };
 
   const updateQty = (id: string, delta: number) => {
     setCart((c) =>
