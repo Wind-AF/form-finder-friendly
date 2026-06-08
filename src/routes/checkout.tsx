@@ -210,6 +210,19 @@ function Checkout() {
 
   const handleSubmit = () => {
     if (validateAll()) {
+      void import("@/lib/tiktok-pixel").then(({ ttqTrack, ttqIdentify }) => {
+        ttqIdentify({ email: form.email, phone_number: "", external_id: form.cpf.replace(/\D/g, "") });
+        ttqTrack("PlaceAnOrder", {
+          contents: cart.map((i) => ({
+            content_id: i.id,
+            content_name: i.name,
+            quantity: i.qty,
+            price: i.price,
+          })),
+          value: total,
+          currency: "BRL",
+        });
+      });
       alert("Pedido validado! (próximo passo: pagamento Pix)");
     }
   };

@@ -886,6 +886,13 @@ function Index() {
                 disabled={!selectedColor || !selectedVoltage}
                 onClick={() => {
                   if (!selectedColor || !selectedVoltage) return;
+                  void import("@/lib/tiktok-pixel").then(({ ttqTrack }) =>
+                    ttqTrack("InitiateCheckout", {
+                      contents: [{ content_id: variant.name, content_name: variant.name, quantity: qty, price: variant.price }],
+                      value: variant.price * qty,
+                      currency: "BRL",
+                    }),
+                  );
                   window.location.href = "/checkout";
                 }}
                 className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-full leading-tight disabled:opacity-50 disabled:cursor-not-allowed"
@@ -899,6 +906,13 @@ function Index() {
                 disabled={!selectedColor || !selectedVoltage}
                 onClick={() => {
                   if (!selectedColor || !selectedVoltage) return;
+                  void import("@/lib/tiktok-pixel").then(({ ttqTrack }) =>
+                    ttqTrack("AddToCart", {
+                      contents: [{ content_id: variant.name, content_name: variant.name, quantity: qty, price: variant.price }],
+                      value: variant.price * qty,
+                      currency: "BRL",
+                    }),
+                  );
                   window.location.href = "/checkout";
                 }}
                 className="w-full border border-primary text-primary font-bold py-3 rounded-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
