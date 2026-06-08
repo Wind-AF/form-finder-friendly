@@ -120,6 +120,26 @@ function PixPage() {
           </div>
         </div>
 
+        <div className="bg-background border border-border rounded-2xl p-5">
+          <h3 className="text-sm font-extrabold text-foreground mb-3">Como pagar em 5 passos</h3>
+          <ol className="space-y-3">
+            {[
+              "Copie o código PIX clicando no botão acima.",
+              "Abra o aplicativo do seu banco no celular.",
+              "Acesse a área PIX e escolha a opção \"PIX Copia e Cola\".",
+              "Cole o código copiado e confirme o valor de R$ " + fmt(pix.amount) + ".",
+              "Finalize o pagamento — a aprovação é instantânea e seu pedido será liberado.",
+            ].map((step, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <span className="text-sm text-foreground leading-snug">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
         <p className="text-[11px] text-muted-foreground text-center">
           ID da transação: {pix.transactionId}
         </p>
