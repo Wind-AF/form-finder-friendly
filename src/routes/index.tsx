@@ -156,10 +156,101 @@ function useCountdown(initialSeconds: number) {
   return `${hh}:${mm}:${ss}`;
 }
 
+type Variant = {
+  name: string;
+  image: string;
+  price: number;
+  oldPrice: number;
+  discount: number;
+  colors: string[];
+  voltages: string[];
+};
+
+const variants: Variant[] = [
+  {
+    name: "Fritadeira Elétrica Forno Oven Air Fryer 12L Mondial",
+    image: vAfon12,
+    price: 88.16,
+    oldPrice: 674.16,
+    discount: 87,
+    colors: ["Preto/Inox"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer Family 4L Mondial",
+    image: vAfn40,
+    price: 94.32,
+    oldPrice: 612.32,
+    discount: 84,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer Pratic 3,5L Mondial",
+    image: vAf30i,
+    price: 79.9,
+    oldPrice: 549.9,
+    discount: 85,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer Grand Family 5L Mondial",
+    image: vAfn50,
+    price: 99.5,
+    oldPrice: 689.0,
+    discount: 85,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Sem Óleo Air Fryer 8L Mondial Mega Family",
+    image: vAfn80,
+    price: 110.56,
+    oldPrice: 771.56,
+    discount: 86,
+    colors: ["Preto/Inox", "Preto"],
+    voltages: ["127V", "220V"],
+  },
+  {
+    name: "Fritadeira Air Fryer Dual Duplo Cesto Mondial",
+    image: vAfd01,
+    price: 120.12,
+    oldPrice: 820.12,
+    discount: 85,
+    colors: ["Preto/Inox", "Vermelho/Inox"],
+    voltages: ["127V"],
+  },
+];
+
+function formatPrice(v: number) {
+  return v.toFixed(2).replace(".", ",");
+}
+
 function Index() {
   const [active, setActive] = useState(0);
   const countdown = useCountdown(3575);
   const [toastVisible, setToastVisible] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedVoltage, setSelectedVoltage] = useState<string | null>(null);
+  const [qty, setQty] = useState(1);
+  const variant = variants[selectedVariant];
+  useEffect(() => {
+    setSelectedColor(null);
+    setSelectedVoltage(null);
+  }, [selectedVariant]);
+  useEffect(() => {
+    if (sheetOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sheetOpen]);
   useEffect(() => {
     const t = setTimeout(() => setToastVisible(true), 800);
     return () => clearTimeout(t);
