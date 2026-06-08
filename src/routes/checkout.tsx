@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createPixPayment } from "@/lib/vizzionpay.functions";
@@ -16,8 +16,6 @@ import {
   Lock,
   ChevronRight,
   X,
-  Copy,
-  Check,
 } from "lucide-react";
 import af30i from "@/assets/products/product-airfryer-af30i-CwILFnZb.webp";
 import afon12 from "@/assets/products/product-airfryer-afon12bi-Dei_i9sw.webp";
@@ -143,16 +141,9 @@ function Checkout() {
   const [cepLoading, setCepLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [pixResult, setPixResult] = useState<{
-    code: string;
-    base64: string;
-    image: string;
-    amount: number;
-    transactionId: string;
-  } | null>(null);
   const [pixError, setPixError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const createPix = useServerFn(createPixPayment);
+  const navigate = useNavigate();
 
   // Masks
   const maskCPF = (v: string) =>
@@ -271,28 +262,25 @@ function Checkout() {
         setPixError(res.error || "Não foi possível gerar o Pix");
         return;
       }
-      setPixResult({
-        code: res.pix.code,
-        base64: res.pix.base64,
-        image: res.pix.image,
-        amount: res.amount,
-        transactionId: res.transactionId,
-      });
+      try {
+        sessionStorage.setItem(
+          "pq:pix",
+          JSON.stringify({
+            code: res.pix.code,
+            base64: res.pix.base64,
+            image: res.pix.image,
+            amount: res.amount,
+            transactionId: res.transactionId,
+          }),
+        );
+      } catch {
+        // ignore storage failures
+      }
+      navigate({ to: "/pix" });
     } catch (err) {
       setPixError(err instanceof Error ? err.message : "Erro ao processar pagamento");
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const copyPix = async () => {
-    if (!pixResult) return;
-    try {
-      await navigator.clipboard.writeText(pixResult.code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // ignore
     }
   };
 
