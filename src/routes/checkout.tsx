@@ -241,19 +241,15 @@ function Checkout() {
       const res = await createPix({
         data: {
           identifier,
-          amount: subtotal,
-          shippingFee: shippingCost || undefined,
+          shippingMethod: shipping,
           client: {
             name: form.name.trim(),
             email: form.email.trim(),
-            phone: "",
             document: form.cpf.replace(/\D/g, ""),
           },
           products: cart.map((i) => ({
             id: i.id,
-            name: i.name,
             quantity: i.qty,
-            price: i.price,
           })),
         },
       });
