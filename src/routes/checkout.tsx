@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Share2,
@@ -578,10 +578,10 @@ function ShippingOption({
 
 function Countdown() {
   const [secs, setSecs] = useState(3 * 3600 + 58 * 60 + 54);
-  useState(() => {
+  useEffect(() => {
     const id = setInterval(() => setSecs((s) => (s > 0 ? s - 1 : 0)), 1000);
     return () => clearInterval(id);
-  });
+  }, []);
   const h = String(Math.floor(secs / 3600)).padStart(2, "0");
   const m = String(Math.floor((secs % 3600) / 60)).padStart(2, "0");
   const s = String(secs % 60).padStart(2, "0");
