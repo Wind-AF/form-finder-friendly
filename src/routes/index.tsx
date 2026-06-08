@@ -21,7 +21,8 @@ import {
 } from "lucide-react";
 import mainImg from "@/assets/products/product-airfryer-afon12-Dq7tqLjo.webp";
 import altImg from "@/assets/products/product-airfryer-CGbRoz4x.webp";
-import vAfon12 from "@/assets/products/product-airfryer-afon12-Dq7tqLjo-2.webp";
+import vAfon12 from "@/assets/products/product-airfryer-afon12bi-Dei_i9sw.webp";
+import vCGbRoz4x from "@/assets/products/product-airfryer-CGbRoz4x.webp";
 import vAfd01 from "@/assets/products/product-airfryer-afd01-CT5TgmNc.webp";
 import vAf30i from "@/assets/products/product-airfryer-af30i-CwILFnZb.webp";
 import vAfn40 from "@/assets/products/product-airfryer-afn40-DUbyBXj0.webp";
@@ -178,7 +179,7 @@ const variants: Variant[] = [
   },
   {
     name: "Fritadeira Sem Óleo Air Fryer Family 4L Mondial",
-    image: vAfn40,
+    image: vCGbRoz4x,
     price: 94.32,
     oldPrice: 612.32,
     discount: 84,
