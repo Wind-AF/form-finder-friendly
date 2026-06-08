@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Check, Copy, Clock, ArrowLeft } from "lucide-react";
-import QRCode from "qrcode";
 
 export const Route = createFileRoute("/pix")({
   component: PixPage,
