@@ -53,7 +53,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const productImages = [mainImg, altImg, r8, r9, r10, r11, r12, altImg];
+const productImages = [mainImg, vAfon12, altImg, vAfd01, vAfn80, vAfn50, vAfn40, vAf30i];
 
 const specs: Array<[string, string]> = [
   ["Modelo", "AFON-12L-BI-BC"],
