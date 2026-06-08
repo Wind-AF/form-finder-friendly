@@ -365,18 +365,20 @@ function Index() {
         </div>
         <div className="flex items-end gap-2">
           <span className="bg-white text-destructive text-sm font-extrabold px-2 py-0.5 rounded">
-            -87%
+            -{variants[active].discount}%
           </span>
           <div className="flex items-baseline gap-1 text-white">
             <span className="text-sm font-semibold">R$</span>
             <span className="text-[42px] font-extrabold tabular-nums leading-none tracking-tight">
-              88,16
+              {formatPrice(variants[active].price)}
             </span>
           </div>
-          <span className="text-white/70 text-sm line-through ml-1 mb-1">R$ 674,16</span>
+          <span className="text-white/70 text-sm line-through ml-1 mb-1">
+            R$ {formatPrice(variants[active].oldPrice)}
+          </span>
         </div>
         <div className="mt-2.5 inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">
-          🎁 Você economiza R$&nbsp;586,00
+          🎁 Você economiza R$&nbsp;{formatPrice(variants[active].oldPrice - variants[active].price)}
         </div>
       </div>
 
@@ -649,7 +651,7 @@ function Index() {
           className="flex-1 bg-primary text-primary-foreground font-bold text-sm py-3 text-center rounded-full leading-tight"
         >
           <span className="block">Comprar agora</span>
-          <span className="block text-xs font-medium opacity-90">R$ 88,16</span>
+          <span className="block text-xs font-medium opacity-90">R$ {formatPrice(variants[active].price)}</span>
         </button>
       </div>
 
