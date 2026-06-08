@@ -888,7 +888,7 @@ function Index() {
                   if (!selectedColor || !selectedVoltage) return;
                   void import("@/lib/tiktok-pixel").then(({ ttqTrack }) =>
                     ttqTrack("InitiateCheckout", {
-                      contents: [{ content_id: variant.id, content_name: variant.name, quantity: qty, price: variant.price }],
+                      contents: [{ content_id: variant.name, content_name: variant.name, quantity: qty, price: variant.price }],
                       value: variant.price * qty,
                       currency: "BRL",
                     }),
@@ -908,7 +908,7 @@ function Index() {
                   if (!selectedColor || !selectedVoltage) return;
                   void import("@/lib/tiktok-pixel").then(({ ttqTrack }) =>
                     ttqTrack("AddToCart", {
-                      contents: [{ content_id: variant.id, content_name: variant.name, quantity: qty, price: variant.price }],
+                      contents: [{ content_id: variant.name, content_name: variant.name, quantity: qty, price: variant.price }],
                       value: variant.price * qty,
                       currency: "BRL",
                     }),
