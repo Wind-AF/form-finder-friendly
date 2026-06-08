@@ -28,7 +28,6 @@ function PixPage() {
   const [pix, setPix] = useState<PixData | null>(null);
   const [copied, setCopied] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [qrDataUrl, setQrDataUrl] = useState<string>("");
 
   useEffect(() => {
     try {
@@ -39,19 +38,6 @@ function PixPage() {
     }
     setLoaded(true);
   }, []);
-
-  useEffect(() => {
-    if (!pix) return;
-    const existing = pix.base64 || pix.image;
-    if (existing) {
-      setQrDataUrl(existing);
-      return;
-    }
-    if (!pix.code) return;
-    QRCode.toDataURL(pix.code, { width: 320, margin: 1 })
-      .then((url) => setQrDataUrl(url))
-      .catch(() => setQrDataUrl(""));
-  }, [pix]);
 
   const copyCode = async () => {
     if (!pix) return;
@@ -83,8 +69,6 @@ function PixPage() {
     );
   }
 
-  const qrSrc = qrDataUrl;
-
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="sticky top-0 z-40 bg-background flex items-center px-3 py-2.5 border-b border-border max-w-lg mx-auto">
@@ -101,23 +85,11 @@ function PixPage() {
           </div>
           <h2 className="text-xl font-extrabold text-foreground">Pedido criado com sucesso!</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Escaneie o QR Code ou copie o código PIX para pagar
+            Copie o código PIX abaixo e pague no app do seu banco
           </p>
         </div>
 
         <div className="bg-background border border-border rounded-2xl p-5 space-y-4">
-          {qrSrc ? (
-            <img
-              src={qrSrc}
-              alt="QR Code PIX"
-              className="w-60 h-60 mx-auto bg-white p-2 rounded-lg"
-            />
-          ) : (
-            <div className="w-60 h-60 mx-auto bg-muted rounded-lg flex items-center justify-center text-xs text-muted-foreground">
-              QR Code indisponível
-            </div>
-          )}
-
           <div className="text-center">
             <div className="text-2xl font-extrabold text-foreground">R$ {fmt(pix.amount)}</div>
             <div className="text-xs text-muted-foreground mt-1">
