@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { PRODUCT_CATALOG, SHIPPING_OPTIONS, type ShippingMethod } from "./products.catalog";
 
-export const VIZZIONPAY_PUBLIC_KEY = "contato-wind-af_jq055rbdjh8n6tho";
+export const VIZZIONPAY_PUBLIC_KEY = "contato-wind-af_q358mtzomtfaij4t";
 
 const CreatePixSchema = z.object({
   identifier: z.string().trim().min(1).max(64).regex(/^[a-zA-Z0-9_-]+$/),
