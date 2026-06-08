@@ -544,12 +544,12 @@ function Index() {
         </div>
         <div className="flex gap-2 flex-wrap mb-5">
           {[
-            ["Tudo (793)", true],
-            ["5 Estrelas (701)", false],
-            ["4 Estrelas (52)", false],
-            ["3 Estrelas (22)", false],
-            ["Com Comentários (128)", false],
-            ["Com Mídia (102)", false],
+            ["Tudo (3.512)", true],
+            ["5 Estrelas (3.104)", false],
+            ["4 Estrelas (287)", false],
+            ["3 Estrelas (78)", false],
+            ["Com Comentários (842)", false],
+            ["Com Mídia (419)", false],
           ].map(([label, active]) => (
             <span
               key={label as string}
